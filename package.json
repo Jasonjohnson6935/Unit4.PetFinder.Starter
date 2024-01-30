@@ -1,11 +1,11 @@
 {
-  "name": "server",
+  "name": "demo",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "PetFinder",
+  "main": "server.js",
   "scripts": {
     "test": "jest --watch",
-    "start": "nodemon index.js"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
