@@ -10,7 +10,10 @@ const app = express();
 const PORT = 8080;
 
 //allows us to be able to use style files
-server.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
+
+//allows us to be able to use style files
+app.use(express.static(path.join(__dirname, "public")));
 
 // GET - / - returns homepage
 app.get('/', (req, res) => {
@@ -27,19 +30,21 @@ app.get('/api', (req, res) => {
 // get all pets from the database
 app.get('/api/v1/pets', (req, res) => {
     // send the pets array as a response
-    res.send(pets);
+    res.json(pets);
 });
 
 // get pet by owner with query string
 app.get('/api/v1/pets/owner', (req, res) => {
-    // get the owner from the request
-    const ownerInfo = req.query.owner;
+    // get the owner from the request query string
+    const ownerName = req.query.owner;
+    console.log('Owner name:', ownerName); // Check if ownerName is received correctly
 
     // find the pet in the pets array
-    const pet = pets.find(pet => pet.owner === owner);
+    const pet = pets.filter(pet => pet.owner === ownerName);
+    console.log('Filtered pets:', pet); // Check the filtered pets
 
     // send the pet as a response
-    res.send(pet);
+    res.json(pet);
 });
 
 // get pet by name
@@ -49,7 +54,7 @@ app.get('/api/v1/pets/:name', (req, res) => {
 
     // find the pet in the pets array
     const pet = pets.filter(
-        (pet)=> pet.name.toLowerCase === petName.toLowerCase);
+        (pet)=> pet.name.toLowerCase() === petName.toLowerCase());
 
     // send the pet as a response
     res.send(pet);

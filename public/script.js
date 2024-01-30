@@ -1,16 +1,20 @@
 const API_URL = `http://localhost:8080/api`;
 
+const state = {
+  pets: [],
+}
+
 /**
  * Fetches all pets from the API.
  * @returns {Object[]} the array of pet objects
  */
 const fetchAllPets = async () => {
   try {
-    const response = await fetch(`${API_URL}/pets`);
-    const json = await response.json();
-    renderAllPets(json);
-  } catch (err) {
-    console.error("Uh oh, trouble fetching pets!", err);
+    const response = await fetch(API_URL)/v1/pets;
+    const pets = await response.json();
+    renderAllPets(pets);
+  } catch (error) {
+    console.error('Uh oh, trouble fetching pets:', error);
   }
 };
 
@@ -35,7 +39,7 @@ const createCard = ({
   const ageInfo = document.createElement("p");
   const ownerInfo = document.createElement("p");
   const telephoneInfo = document.createElement("p");
- 
+  const appointmentsInfo = document.createElement("ul");
 
   // Add class names to the elements
   card.className = "card";
@@ -47,7 +51,6 @@ const createCard = ({
     { element: ageInfo, info: `Age: ${age}` },
     { element: ownerInfo, info: `Owner: ${owner}` },
     { element: telephoneInfo, info: `Telephone: ${telephone}` },
-    { element: appointmentsInfo, info: 'Appointment: ${appointment}'}
   ];
 
   // Add pet information to the elements
@@ -57,7 +60,6 @@ const createCard = ({
   });
 
   // Render appointments
-  const appointmentsInfo = document.createElement("ul");
   appointmentsInfo.textContent = "Appointments:";
   appointments.forEach((apt) => {
     const li = document.createElement("li");
@@ -66,7 +68,7 @@ const createCard = ({
   });
   div.appendChild(appointmentsInfo);
 
-  card.appendChild(petInfo);
+  card.appendChild(div);
 
   // Return the new DOM card
   return card;
@@ -75,12 +77,11 @@ const createCard = ({
 /**
  * Updates `<main>` to display a list of all pets.
  */
-const renderAllPets = (petsList) => {
-  // Clears the page of any previous elements
-  $main.innerHTML = "";
+const renderAllPets = (pets) => {
+  $main.innerHTML = ''; // Clear existing content
 
   // Check if the list has pets
-  if (petsList.length === 0) {
+  if (pets.length === 0) {
     const message = document.createElement("h2");
     message.textContent = "No current pets";
     $main.appendChild(message);
@@ -88,7 +89,7 @@ const renderAllPets = (petsList) => {
   }
 
   // Render each pet
-  petsList.forEach((pet) => {
+  pets.forEach((pet) => {
     const card = createCard(pet);
     $main.appendChild(card);
   });
